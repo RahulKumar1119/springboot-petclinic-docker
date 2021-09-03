@@ -17,7 +17,7 @@ spec:
         image: 9870050478/springboot-petclinic:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8086
+        - containerPort: 8080
 # service type loadbalancer
 ---
 apiVersion: v1
@@ -30,5 +30,5 @@ spec:
   ports:
     - protocol: TCP
       port: 8086
-      targetPort: 8086
+      targetPort: 8080
   type: LoadBalancer
