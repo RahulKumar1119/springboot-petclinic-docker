@@ -13,7 +13,7 @@ spec:
         app: springboot-petclinic
     spec:
       containers:
-      - name: my-angular-app
+      - name: springboot-petclinic
         image: 9870050478/springboot-petclinic:latest
         imagePullPolicy: Always
         ports:
