@@ -5,7 +5,7 @@ pool:
   vmImageName: 'ubuntu-18.04'
 
 stages:
-- stage: Build and Push
+- stage: Build-and-Push
   displayName: Build and Push stage
   jobs:
   - job: BuildandPushJob
@@ -29,11 +29,12 @@ stages:
 
 - stage: Deploy
   displayName: Deploy stage
-  dependsOn: Build and Push 
+  dependsOn: Build-and-Push 
   condition: succeeded()
   jobs:
   - deployment: DeploytoEC2Instance
     displayName: Deploy to EC2 Instance
+    environment: 'development'
     strategy:
       runOnce:
         deploy: 
@@ -45,7 +46,4 @@ stages:
               commands: |
                 docker login
                 docker run -it -d  -p 8081:8080 9870050478/springboot-petclinic-docker:$(Build.BuildId)
-              interactiveSession: true  
-
-
-
+              interactiveSession: true 
