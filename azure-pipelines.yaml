@@ -45,5 +45,6 @@ stages:
               sshEndpoint: 'ec2-instance'
               commands: |
                 docker login
-                docker run -it -d  -p 8081:8080 9870050478/springboot-petclinic-docker:$(Build.BuildId)
-              interactiveSession: true  
+                docker rm -f springboot-petclinic
+                docker run -it -d  -p 8081:8080 --name springboot-petclinic 9870050478/springboot-petclinic-docker:$(Build.BuildId)
+              
