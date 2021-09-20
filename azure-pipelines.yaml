@@ -2,7 +2,7 @@ trigger:
 - master
 
 pool:
-  vmImageName: 'ubuntu-18.04'
+  vmImageName: 'ubuntu-latest'
 
 stages:
 - stage: Build_and_Push
