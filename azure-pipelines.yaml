@@ -2,12 +2,29 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-18.04'
+  vmImageName: 'ubuntu-18.04'
 
 steps:
-  - script: echo Hello, World !
-    displayName: 'Run a one line script'
+- task: Docker@0
+  displayName: 'Build an image'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerFile: Dockerfile
+    imageName: '9870050478/springboot-petclinic-docker:$(Build.BuildId)'
 
-  - script: |
-      echo Hello, World!
-    displayName: 'Run a one line script'
+- task: Docker@0
+  displayName: 'Push an image'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryConnection: dockerhub
+    action: 'Push an image'
+    imageName: '9870050478/springboot-petclinic-docker:$(Build.BuildId)'
+
+- task: SSH@0
+  displayName: 'Run shell commands on remote machine'
+  inputs:
+    sshEndpoint: 'ec2-instance'
+    commands: |
+     docker login
+     docker run -it -d  -p 8081:8080 9870050478/springboot-petclinic-docker:$(Build.BuildId)
+    interactiveSession: true
