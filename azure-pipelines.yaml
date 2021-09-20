@@ -4,27 +4,48 @@ trigger:
 pool:
   vmImageName: 'ubuntu-18.04'
 
-steps:
-- task: Docker@0
-  displayName: 'Build an image'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerFile: Dockerfile
-    imageName: '9870050478/springboot-petclinic-docker:$(Build.BuildId)'
+stages:
+- stage: Build and Push
+  displayName: Build and Push stage
+  jobs:
+  - job: BuildandPushJob
+    displayName: Build and Push Job
 
-- task: Docker@0
-  displayName: 'Push an image'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryConnection: dockerhub
-    action: 'Push an image'
-    imageName: '9870050478/springboot-petclinic-docker:$(Build.BuildId)'
+    steps:
+    - task: Docker@0
+      displayName: 'Build an image'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerFile: Dockerfile
+        imageName: '9870050478/springboot-petclinic-docker:$(Build.BuildId)'
 
-- task: SSH@0
-  displayName: 'Run shell commands on remote machine'
-  inputs:
-    sshEndpoint: 'ec2-instance'
-    commands: |
-     docker login
-     docker run -it -d  -p 8081:8080 9870050478/springboot-petclinic-docker:$(Build.BuildId)
-    interactiveSession: true
+    - task: Docker@0
+      displayName: 'Push an image'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryConnection: dockerhub
+        action: 'Push an image'
+        imageName: '9870050478/springboot-petclinic-docker:$(Build.BuildId)'
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build and Push 
+  condition: succeeded()
+  jobs:
+  - deployment: DeploytoEC2Instance
+    displayName: Deploy to EC2 Instance
+    strategy:
+      runOnce:
+        deploy: 
+          steps:
+          - task: SSH@0
+            displayName: 'Run shell commands on remote machine'
+            inputs:
+              sshEndpoint: 'ec2-instance'
+              commands: |
+                docker login
+                docker run -it -d  -p 8081:8080 9870050478/springboot-petclinic-docker:$(Build.BuildId)
+              interactiveSession: true  
+
+
+
