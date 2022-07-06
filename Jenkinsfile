@@ -1,13 +1,13 @@
 node {
-  def mvnHome = tool 'Maven3' 
+  #def mvnHome = tool 'Maven3' 
   
     stage ('checkout') {
        checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/RahulKumar1119/springboot-petclinic-docker/']]])  
     }
     
-    stage ('Build') {
-            sh './mvnw package'           
-        }
+    #stage ('Build') {
+    #        sh './mvnw package'           
+    #    }
         
     stage ('Docker Build') {
          // Build and push image with Jenkins' docker-plugin
