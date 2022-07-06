@@ -13,7 +13,8 @@ pipeline {
     
     	stage('Building our image') { 
             steps { 
-		sh "sudo docker build -t cytriohub/cytrio-graphservice:$BUILD_NUMBER ."
+		sh "sudo docker build -t 9870050478/spring-petclinic:$BUILD_NUMBER ."
+		sh "sudo docker tag 9870050478/spring-petclinic:$BUILD_NUMBER 9870050478/spring-petclinic:latest"
               		}
         	}
 	}
