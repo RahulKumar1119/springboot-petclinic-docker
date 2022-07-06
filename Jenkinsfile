@@ -13,12 +13,8 @@ pipeline {
     
     	stage('Building our image') { 
             steps { 
-                script { 
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
-                }
-
-            } 
-
-        }
+		sh "sudo docker build -t cytriohub/cytrio-graphservice:$BUILD_NUMBER ."
+              		}
+        	}
 	}
 }
