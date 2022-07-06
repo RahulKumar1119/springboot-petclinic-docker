@@ -15,6 +15,7 @@ pipeline {
             steps { 
 		sh "sudo docker build -t 9870050478/spring-petclinic:$BUILD_NUMBER ."
 		sh "sudo docker tag 9870050478/spring-petclinic:$BUILD_NUMBER 9870050478/spring-petclinic:latest"
+		sh "sudo docker push 9870050478/spring-petclinic:latest"
               		}
         	}
 	}
